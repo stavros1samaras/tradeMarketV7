@@ -6,10 +6,10 @@ import Text from "~/components/Text";
 export default function TechnicalNavigation() {
     return (
         <SubNavigationMenu>
-            <Link to={`/technical/overview/${"BTC-USD"}`}>
+            <Link to={`/se/technical/overview/${"BTC-USD"}`}>
                 <Text>overview</Text>
             </Link>
-            <Link to="/technical/signals">
+            <Link to="/se/technical/signals">
                 <Text>Signals</Text>
             </Link>
             <Link to="/">

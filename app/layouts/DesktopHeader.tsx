@@ -7,16 +7,16 @@ import LivePrices from "./LivePrices";
 export default function DesktopHeader() {
     return (
         <><MainNavigationMenu>
-            <Link to="/technical/overview/BTC-USD">
+            <Link to="/se/technical/overview/BTC-USD">
                 <Text>Techical</Text>
             </Link>
-            <Link to="/fundamental/single-analysis">
+            <Link to="/se/fundamental/single-analysis">
                 <Text>Fundamental</Text>
             </Link>
-            <Link to="/sentiment">
+            <Link to="/se/sentiment">
                 <Text>Sentiment</Text>
             </Link>
-            <Link to="/contact">
+            <Link to="/se/contact">
                 <Text>Contact</Text>
             </Link>
         </MainNavigationMenu>

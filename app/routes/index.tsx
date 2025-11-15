@@ -9,5 +9,5 @@ export function meta({ }: Route.MetaArgs) {
 }
 
 export async function loader() {
-  return redirect(`/technical/overview/${"BTC-USD"}`);
+  return redirect(`/se/technical/overview/${"BTC-USD"}`);
 }
