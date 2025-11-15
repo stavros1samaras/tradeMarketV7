@@ -20,7 +20,7 @@ export default function DesktopHeader() {
                 <Text>Contact</Text>
             </Link>
         </MainNavigationMenu>
-            {/* <LivePrices /> */}
+            <LivePrices />
         </>
     );
 }

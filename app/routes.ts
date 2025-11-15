@@ -1,32 +1,58 @@
 import { type RouteConfig, route, index, layout, prefix } from "@react-router/dev/routes";
 export default [
     index("./routes/index.tsx"),
-    ...prefix("se", [
-        layout("./layouts/service.tsx", [
-            ...prefix("technical", [
-                layout("./layouts/technical.tsx", [
-                    route("overview/:symbol", "./routes/Technical/overview.tsx"),
-                    route("signals", "./routes/Technical/signals.tsx"),
-                ])
-            ]),
-            ...prefix("fundamental", [
-                layout("./layouts/fundamental.tsx", [
-                    route("single-analysis", "./routes/Fundamental/single-analysis.tsx"),
-                    route("auto-analysis", "./routes/Fundamental/auto-analysis.tsx"),
-                ])
-            ]),
-            ...prefix("sentiment", [
-                layout("./layouts/sentiment.tsx", [
-                    index("./routes/Sentiment/Components/SentimentNavigation.tsx")
-                ])
-            ]),
-            ...prefix("contact", [
-                layout("./layouts/contact.tsx", [
-                    index("./routes/Contact/contact.tsx")
-                ]),
+    // ...prefix("se", [
+    //     layout("./layouts/service.tsx", [
+    //         ...prefix("technical", [
+    //             layout("./layouts/technical.tsx", [
+    //                 route("overview/:symbol", "./routes/Technical/overview.tsx"),
+    //                 route("signals", "./routes/Technical/signals.tsx"),
+    //             ])
+    //         ]),
+    //         ...prefix("fundamental", [
+    //             layout("./layouts/fundamental.tsx", [
+    //                 route("single-analysis", "./routes/Fundamental/single-analysis.tsx"),
+    //                 route("auto-analysis", "./routes/Fundamental/auto-analysis.tsx"),
+    //             ])
+    //         ]),
+    //         ...prefix("sentiment", [
+    //             layout("./layouts/sentiment.tsx", [
+    //                 index("./routes/Sentiment/Components/SentimentNavigation.tsx")
+    //             ])
+    //         ]),
+    //         ...prefix("contact", [
+    //             layout("./layouts/contact.tsx", [
+    //                 index("./routes/Contact/contact.tsx")
+    //             ]),
+    //         ])
+    //     ]),
+    // ]),
+    route("se", "./layouts/service.tsx", [
+
+        ...prefix("technical", [
+            layout("./layouts/technical.tsx", [
+                route("overview/:symbol", "./routes/Technical/overview.tsx"),
+                route("signals", "./routes/Technical/signals.tsx"),
             ])
         ]),
+        ...prefix("fundamental", [
+            layout("./layouts/fundamental.tsx", [
+                route("single-analysis", "./routes/Fundamental/single-analysis.tsx"),
+                route("auto-analysis", "./routes/Fundamental/auto-analysis.tsx"),
+            ])
+        ]),
+        ...prefix("sentiment", [
+            layout("./layouts/sentiment.tsx", [
+                index("./routes/Sentiment/Components/SentimentNavigation.tsx")
+            ])
+        ]),
+        ...prefix("contact", [
+            layout("./layouts/contact.tsx", [
+                index("./routes/Contact/contact.tsx")
+            ]),
+        ])
     ]),
+
 
     // route("fetchTickerPriceGraph", "./routes/resources/fetchTickerPriceGraph.tsx") 
     route("fetchTickerPricePoints/:ticker", "./routes/resources/fetchTickerPricePoints.tsx"),
