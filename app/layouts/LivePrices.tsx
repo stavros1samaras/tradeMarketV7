@@ -4,48 +4,28 @@ import type { loader } from "./service";
 
 export default function LivePrices() {
 
-    let invoices = useLoaderData<typeof loader>();
-    const [prices, setPrices] = useState(invoices);
+    let firstPrices = useLoaderData<typeof loader>();
+    const [livePrices, setlivePrices] = useState(firstPrices);
 
-    console.log(invoices);
-    const fetcher = useFetcher();
+    const currentPrices = useFetcher();
 
     useEffect(() => {
-
         const id = setInterval(() => {
-            fetcher.submit({}, { method: "post", action: "/se" });
+            currentPrices.load("/fetchCryptoLivePrices");
         }, 93000);
 
         return () => clearInterval(id);
     }, []);
 
-    // useEffect(() => {
-    //     // Κάνε πρώτο fetch με το που μπει το component
-    //     fetcher.submit({}, { method: "post", action: "/se" });
-
-    //     const id = setInterval(() => {
-    //         fetcher.submit({}, { method: "post", action: "/se" });
-    //     }, 93000);
-
-    //     return () => clearInterval(id);
-    // }, []);
+    useEffect(() => {
+        if (currentPrices.data !== undefined) {
+            setlivePrices(currentPrices.data);
+        }
+    }, [currentPrices.data]);
 
     return (
         <div>
-            {invoices ? (
-                <div>Τρέχουσα τιμή: {JSON.stringify(invoices)}</div>
-            ) : (
-                <div>Loading...</div>
-            )}
+            <div>{JSON.stringify(livePrices)}</div>
         </div>
-        // <div>
-        //     {fetcher.data ? (
-        //         <div>Τρέχουσα τιμή: {JSON.stringify(fetcher.data)}</div>
-        //     ) : (
-        //         <div>Loading...</div>
-        //     )}
-        // </div>
-
-
     );
 }
