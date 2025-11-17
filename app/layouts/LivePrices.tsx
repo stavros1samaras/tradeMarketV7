@@ -13,7 +13,7 @@ export default function LivePrices() {
     useEffect(() => {
 
         const id = setInterval(() => {
-            fetcher.submit({}, { method: "get", action: "/se" });
+            fetcher.submit({}, { method: "post", action: "/se" });
         }, 93000);
 
         return () => clearInterval(id);
