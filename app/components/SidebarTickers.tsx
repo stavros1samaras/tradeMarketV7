@@ -1,4 +1,4 @@
-import { Form, Link } from "react-router";
+import { Form, Link, useFetcher } from "react-router";
 import { useLocation } from 'react-router'
 import { Button } from "./ui/button";
 
@@ -7,28 +7,21 @@ import { Button } from "./ui/button";
 //I NEED TO REFACTOR THE FUNCTION MAYBE 
 //I WRITE THIS HERE NOT TO FORGET IT
 
-
-
-
 export default function SidebarTickers({ name, symbol }: any) {
 
     let location = useLocation();
-    const encodedFrom = encodeURIComponent(location.pathname); // κωδικοποιεί τα '/'
+    const encodedFrom = encodeURIComponent(location.pathname);
+    const fetcher = useFetcher();
 
-
-    // console.log(location.pathname)
-
-    // if (location.pathname.includes("/overview")) 
-    //     window.location.href = `/technical/overview/${symbol}`;
-
+    const handleClick = () => {
+        fetcher.load(`/fetchNewTicker/${symbol}/${encodedFrom}`);
+    };
 
     return (
-        <Link to={`/fetchNewTicker/${symbol}/${encodedFrom}`} >
-
-            <Button variant="code" size="default">
-                <code>{name}</code>
-            </Button>
-        </Link>
-
+        // <Link to={`/fetchNewTicker/${symbol}/${encodedFrom}`} >
+        <Button onClick={handleClick} variant="code" size="default">
+            <code>{name}</code>
+        </Button>
+        // </Link>
     )
 }

@@ -3,7 +3,6 @@ import { fetchTickerPricePoints } from '~/routes/resources/fetchTickerPricePoint
 import type { Ticker } from "~/types/tickers";
 import type { Route } from './+types/overview';
 
-
 export async function loader({ params }: Route.LoaderArgs) {
     const ticker: Ticker = { symbol: params.symbol }
     let pricePoints = await fetchTickerPricePoints(ticker);

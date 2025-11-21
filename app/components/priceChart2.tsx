@@ -46,21 +46,28 @@ export function GraphTabs({ month, oneYear, max }: any) {
     );
 }
 
-
-
-
 export default function PriceChart2({ chartData }: props) {
 
     let { symbol } = useParams();
     const symbolAsked: string = symbol as string;
-    console.log(symbolAsked)
-
     const [data, setData] = useState(chartData);
     const [datesPerPeriod, setDatesPerPeriod] = useState<number>(100);
+
+    console.log("*************************************************************************")
 
     let oneYearRangeRef = useRef(null);
     let oneMonthRangeRef = useRef(null);
     let maxRangeRef = useRef<any>(null);
+
+    useEffect(() => {
+        setData(chartData);
+    }, [chartData]);
+
+    useEffect(() => {
+        oneYearRangeRef.current = null;
+        oneMonthRangeRef.current = null;
+        maxRangeRef.current = null;
+    }, [{ symbol }]);
 
     const fetchTickerPricePoints = async (ticker: Ticker) => {
         const res = await fetch(`/fetchTickerPricePoints/${ticker.symbol}?start=${ticker.startDate}&end=${ticker.endDate}&interval=${ticker.interval}`);
