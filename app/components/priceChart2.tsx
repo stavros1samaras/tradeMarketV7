@@ -56,36 +56,9 @@ export default function PriceChart2({ chartData }: props) {
     const [data, setData] = useState(chartData);
     const [datesPerPeriod, setDatesPerPeriod] = useState<number>(100);
 
-    console.log("*************************************************************************")
-
     let oneYearRangeRef = useRef(null);
     let oneMonthRangeRef = useRef(null);
     let maxRangeRef = useRef<any>(null);
-
-    // const firstRender = useRef(true);
-
-    // useEffect(() => {
-    //     // Αν είναι το πρώτο render → μην κάνεις update
-    //     if (firstRender.current) {
-    //         firstRender.current = false;
-    //         return;
-    //     }
-
-    //     // Μόνο από το 2ο render και μετά
-    //     setData(pricePoints);
-
-    // }, [pricePoints]);
-
-
-    // useEffect(() => {
-    //     setData(chartData);
-    // }, [chartData]);
-
-    // useEffect(() => {
-    //     oneYearRangeRef.current = null;
-    //     oneMonthRangeRef.current = null;
-    //     maxRangeRef.current = null;
-    // }, [{ symbol }]);
 
     const fetchTickerPricePoints = async (ticker: Ticker) => {
         const res = await fetch(`/fetchTickerPricePoints/${ticker.symbol}?start=${ticker.startDate}&end=${ticker.endDate}&interval=${ticker.interval}`);

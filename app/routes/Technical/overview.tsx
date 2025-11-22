@@ -17,8 +17,7 @@ export default function overview({ loaderData }: Route.ComponentProps) {
     return (
         <>
             <h2>Bit Price Overview</h2>
-            <PriceChart key={symbol.symbol}
-                chartData={loaderData.pricePoints} />
+            <PriceChart key={symbol.symbol} chartData={loaderData.pricePoints} />
         </>
     )
 }
