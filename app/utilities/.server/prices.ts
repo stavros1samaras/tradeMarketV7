@@ -16,3 +16,4 @@ export const currentSymbolPrice = async () => {
         console.error("Error fetching prices:", error);
     }
 }
+
