@@ -149,7 +149,7 @@ export default function PriceChart2({ chartData }: props) {
                     <YAxis />
 
                     <Tooltip />
-                    <Area type="monotone" dataKey="close" stroke="#004bedff" fill="#8884d8" name="Bitcoin Price" />
+                    <Area type="monotone" dataKey="close" isAnimationActive={false} stroke="#004bedff" fill="#8884d8" name="Bitcoin Price" />
                     <Legend verticalAlign="top" align="right" />
                 </AreaChart>
             </ResponsiveContainer>
