@@ -5,7 +5,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import type { Ticker } from "~/types/tickers";
 import type { date } from "~/types/date";
 import { MAX_START_DATE, MAX_INTERVAL, ONE_MONTH_INTERVAL, ONE_YEAR_INTERVAL } from "~/constants";
-import { useFetcher, useParams } from "react-router";
+import { useFetcher, useLoaderData, useParams } from "react-router";
 // import React from "react";
 import * as React from 'react';
 import { Tabs } from '@base-ui-components/react/tabs';
@@ -50,6 +50,9 @@ export default function PriceChart2({ chartData }: props) {
 
     let { symbol } = useParams();
     const symbolAsked: string = symbol as string;
+
+    // const { pricePoints } = useLoaderData();
+
     const [data, setData] = useState(chartData);
     const [datesPerPeriod, setDatesPerPeriod] = useState<number>(100);
 
@@ -59,15 +62,30 @@ export default function PriceChart2({ chartData }: props) {
     let oneMonthRangeRef = useRef(null);
     let maxRangeRef = useRef<any>(null);
 
-    useEffect(() => {
-        setData(chartData);
-    }, [chartData]);
+    // const firstRender = useRef(true);
 
-    useEffect(() => {
-        oneYearRangeRef.current = null;
-        oneMonthRangeRef.current = null;
-        maxRangeRef.current = null;
-    }, [{ symbol }]);
+    // useEffect(() => {
+    //     // Αν είναι το πρώτο render → μην κάνεις update
+    //     if (firstRender.current) {
+    //         firstRender.current = false;
+    //         return;
+    //     }
+
+    //     // Μόνο από το 2ο render και μετά
+    //     setData(pricePoints);
+
+    // }, [pricePoints]);
+
+
+    // useEffect(() => {
+    //     setData(chartData);
+    // }, [chartData]);
+
+    // useEffect(() => {
+    //     oneYearRangeRef.current = null;
+    //     oneMonthRangeRef.current = null;
+    //     maxRangeRef.current = null;
+    // }, [{ symbol }]);
 
     const fetchTickerPricePoints = async (ticker: Ticker) => {
         const res = await fetch(`/fetchTickerPricePoints/${ticker.symbol}?start=${ticker.startDate}&end=${ticker.endDate}&interval=${ticker.interval}`);
