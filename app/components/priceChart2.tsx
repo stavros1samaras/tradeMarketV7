@@ -51,54 +51,65 @@ export default function PriceChart2({ chartData }: props) {
     let { symbol } = useParams();
     const symbolAsked: string = symbol as string;
 
-    // const { pricePoints } = useLoaderData();
-
     const [data, setData] = useState(chartData);
     const [datesPerPeriod, setDatesPerPeriod] = useState<number>(100);
 
-    let oneYearRangeRef = useRef(null);
-    let oneMonthRangeRef = useRef(null);
+    let oneYearRangeRef = useRef<any>(null);
+    let oneMonthRangeRef = useRef<any>(chartData);
     let maxRangeRef = useRef<any>(null);
 
-    const fetchTickerPricePoints = async (ticker: Ticker) => {
-        const res = await fetch(`/fetchTickerPricePoints/${ticker.symbol}?start=${ticker.startDate}&end=${ticker.endDate}&interval=${ticker.interval}`);
-        const pricePoints = await res.json();
-        console.log(pricePoints);
-        return (pricePoints);
-    }
+    const fetcher = useFetcher();
 
-    const oneYearDate = async (): Promise<void> => {
-        if (oneYearRangeRef.current === null) {
-            const previousYearDate: date = { ...findPreviousYearDate() };
-            const ticker: Ticker = { symbol: symbolAsked, startDate: previousYearDate.startDate }
-            oneYearRangeRef.current = await fetchTickerPricePoints(ticker);
+    const [pendingRef, setPendingRef] = useState<null | { ref: any; period: number; }>(null);
+
+    useEffect(() => {
+        if (fetcher.state === "idle" && fetcher.data && pendingRef) {
+            pendingRef.ref.current = fetcher.data;
+            setData(fetcher.data);
+            setDatesPerPeriod(pendingRef.period);
+            setPendingRef(null);
         }
-        setData(oneYearRangeRef.current);
-        setDatesPerPeriod(ONE_YEAR_INTERVAL);
-    }
+    }, [fetcher.state, fetcher.data]);
 
-    const maxPeriod = async () => {
-        if (maxRangeRef.current === null) {
-            const ticker: Ticker = { symbol: symbolAsked, startDate: MAX_START_DATE }
-            maxRangeRef.current = await fetchTickerPricePoints(ticker);
-        }
-        setData(maxRangeRef.current);
-        setDatesPerPeriod(MAX_INTERVAL);
-    }
-
-    const oneMonth = async () => {
+    const oneMonth = () => {
         if (oneMonthRangeRef.current === null) {
             const previousMonthDate: date = { ...findPreviousMonthDate() };
-            const ticker: Ticker = { symbol: symbolAsked, startDate: previousMonthDate.startDate }
-            oneMonthRangeRef.current = await fetchTickerPricePoints(ticker);
+            const ticker: Ticker = { symbol: symbolAsked, startDate: previousMonthDate.startDate };
+            setPendingRef({ ref: oneMonthRangeRef, period: ONE_MONTH_INTERVAL });
+            fetcher.load(`/fetchTickerPricePoints/${ticker.symbol}?start=${ticker.startDate}`);
+        } else {
+            setData(oneMonthRangeRef.current);
+            setDatesPerPeriod(ONE_MONTH_INTERVAL);
         }
-        setData(oneMonthRangeRef.current);
-        setDatesPerPeriod(ONE_MONTH_INTERVAL);
-    }
+    };
+    const oneYearDate = () => {
+        if (oneYearRangeRef.current === null) {
+            const previousYearDate: date = { ...findPreviousYearDate() };
+            const ticker: Ticker = { symbol: symbolAsked, startDate: previousYearDate.startDate };
+            setPendingRef({ ref: oneYearRangeRef, period: ONE_YEAR_INTERVAL });
+            fetcher.load(`/fetchTickerPricePoints/${ticker.symbol}?start=${ticker.startDate}`);
+        } else {
+            setData(oneYearRangeRef.current);
+            setDatesPerPeriod(ONE_YEAR_INTERVAL);
+        }
+    };
+
+    const maxPeriod = () => {
+        if (maxRangeRef.current === null) {
+            const ticker: Ticker = { symbol: symbolAsked, startDate: MAX_START_DATE };
+            setPendingRef({ ref: maxRangeRef, period: MAX_INTERVAL });
+            fetcher.load(`/fetchTickerPricePoints/${ticker.symbol}?start=${ticker.startDate}`);
+        } else {
+            setData(maxRangeRef.current);
+            setDatesPerPeriod(MAX_INTERVAL);
+        }
+    };
+
 
     return (
         <>
             <GraphTabs month={oneMonth} oneYear={oneYearDate} max={maxPeriod} />
+
             <ResponsiveContainer width="100%" height={300}>
                 <AreaChart
                     width={500}
@@ -109,20 +120,28 @@ export default function PriceChart2({ chartData }: props) {
                         right: 30,
                         left: 0,
                         bottom: 0,
-
                     }}
                 >
                     <CartesianGrid strokeDasharray="100 100" vertical={false} />
-                    <XAxis dataKey="Date" interval={datesPerPeriod}
+                    <XAxis
+                        dataKey="Date"
+                        interval={datesPerPeriod}
                         tickFormatter={(date, index) => {
-                            if (index === 0) return ""; // krivei tin prwti timi
-                            return date.split("T")[0]; // krata tin imerominia prin to T
-                        }} />
-                    {/* <YAxis domain={['dataMin-1000', 'dataMax+1000']} /> */}
+                            if (index === 0) return "";
+                            return date.split("T")[0];
+                        }}
+                    />
                     <YAxis />
 
                     <Tooltip />
-                    <Area type="monotone" dataKey="close" isAnimationActive={false} stroke="#004bedff" fill="#8884d8" name="Bitcoin Price" />
+                    <Area
+                        type="monotone"
+                        dataKey="close"
+                        isAnimationActive={false}
+                        stroke="#004bedff"
+                        fill="#8884d8"
+                        name="Bitcoin Price"
+                    />
                     <Legend verticalAlign="top" align="right" />
                 </AreaChart>
             </ResponsiveContainer>

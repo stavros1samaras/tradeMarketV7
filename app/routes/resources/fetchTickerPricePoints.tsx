@@ -1,5 +1,5 @@
 import type { Ticker } from "~/types/tickers";
-import { createTicker } from "../../utilities/.server/tickers";
+// import { createTicker } from "../../utilities/.server/tickers";
 import { BASE_URL } from "~/constants";
 import type { Route } from "./+types/fetchTickerPricePoints";
 
