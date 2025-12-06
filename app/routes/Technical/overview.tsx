@@ -8,9 +8,10 @@ import { overviewModule } from '../../modules/.server/technical'
 
 export async function loader({ params, request }: Route.LoaderArgs) {
     const ticker: Ticker = { symbol: params.symbol }
+    console.log(request.url)
+
     let pricePoints = await fetchTickerPricePoints(ticker);
     return (await overviewModule(params, request))
-    // console.log(request.url)
     const temp = request.url
     return ({ pricePoints, temp })
 }

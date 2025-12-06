@@ -87,7 +87,9 @@ export default function PriceChart2({ chartData }: props) {
             const previousYearDate: date = { ...findPreviousYearDate() };
             const ticker: Ticker = { symbol: symbolAsked, startDate: previousYearDate.startDate };
             setPendingRef({ ref: oneYearRangeRef, period: ONE_YEAR_INTERVAL });
-            fetcher.load(`/fetchTickerPricePoints/${ticker.symbol}?start=${ticker.startDate}`);
+            // fetcher.load(`/fetchTickerPricePoints/${ticker.symbol}?start=${ticker.startDate}`);
+            fetcher.load(`/se/technical/overview/${ticker.symbol}?start=${ticker.startDate}`);
+
         } else {
             setData(oneYearRangeRef.current);
             setDatesPerPeriod(ONE_YEAR_INTERVAL);
