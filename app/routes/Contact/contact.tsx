@@ -3,7 +3,7 @@ import { Form, redirect } from "react-router";
 import type { Route } from "../+types";
 // import type { Route } from "./bigComponents/+types/contactLayout";
 
-export async function clientAction({ request }: Route.ClientActionArgs) {
+export async function action({ request }: Route.ClientActionArgs) {
 
     let formData = await request.formData();
     let name = formData.get("name");
@@ -28,14 +28,18 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
             body: formData,
         });
         if (response.ok) {
-            alert("Message sent!");
+            // alert("Message sent!");
+            console.log(formData)
         }
     } catch (error) {
         console.error(error);
-        alert("Error sending message.");
+        // alert("Error sending message.");
+        console.log("asdasd")
+
     }
 
-    return redirect("/contact");
+    return redirect("/");
+    // return JSON.stringify(formData.get("email"))
 }
 
 export default function ContactLayout({ actionData }: Route.ComponentProps) {

@@ -76,7 +76,7 @@ export default function PriceChart2({ chartData }: props) {
             const previousMonthDate: date = { ...findPreviousMonthDate() };
             const ticker: Ticker = { symbol: symbolAsked, startDate: previousMonthDate.startDate };
             setPendingRef({ ref: oneMonthRangeRef, period: ONE_MONTH_INTERVAL });
-            fetcher.load(`/fetchTickerPricePoints/${ticker.symbol}?start=${ticker.startDate}`);
+            fetcher.load(`/se/technical/overview/${ticker.symbol}?start=${ticker.startDate}`);
         } else {
             setData(oneMonthRangeRef.current);
             setDatesPerPeriod(ONE_MONTH_INTERVAL);
@@ -100,7 +100,7 @@ export default function PriceChart2({ chartData }: props) {
         if (maxRangeRef.current === null) {
             const ticker: Ticker = { symbol: symbolAsked, startDate: MAX_START_DATE };
             setPendingRef({ ref: maxRangeRef, period: MAX_INTERVAL });
-            fetcher.load(`/fetchTickerPricePoints/${ticker.symbol}?start=${ticker.startDate}`);
+            fetcher.load(`/se/technical/overview/${ticker.symbol}?start=${ticker.startDate}`);
         } else {
             setData(maxRangeRef.current);
             setDatesPerPeriod(MAX_INTERVAL);
