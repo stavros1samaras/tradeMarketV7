@@ -29,68 +29,96 @@ app.get("/api/quote/:symbol", async (req, res) => {
     }
 });
 
+function deleteByPath(obj, path) {
+    const parts = path.split(".");
+    let current = obj;
+
+    for (let i = 0; i < parts.length - 1; i++) {
+        if (!current || typeof current !== "object") return;
+        current = current[parts[i]];
+    }
+
+    if (current && typeof current === "object") {
+        delete current[parts[parts.length - 1]];
+    }
+}
+
 app.get("/api/insights/:symbol", async (req, res) => {
     try {
         const { symbol } = req.params;
+
+        if (!symbol) {
+            return res.status(400).json({ error: "Symbol is required" });
+        }
+
         const insights = await yf.insights(symbol.toUpperCase());
 
-        const filteredInsights = {
-            symbol: insights.symbol,
+        if (!insights) {
+            return res.status(502).json({ error: "No data returned from Yahoo Finance" });
+        }
 
-            companySnapshot: insights.companySnapshot
-                ? {
-                    sector: insights.companySnapshot.sector,
-                    sectorInfo: insights.companySnapshot.sectorInfo,
-                    company: insights.companySnapshot.company
-                }
-                : null,
+        const excludeFields = [
+            "recommendation.score",
+            "instrumentInfo",
+            "companySnapshot1.sectorInfo"
+        ];
 
-            recommendation: insights.recommendation
-                ? {
-                    direction: insights.recommendation.direction,
-                    score: insights.recommendation.score,
-                    scoreDescription: insights.recommendation.scoreDescription,
-                    sectorDirection: insights.recommendation.sectorDirection,
-                    indexDirection: insights.recommendation.indexDirection
-                }
-                : null,
+        const filteredInsights = { ...insights };
 
-            instrumentInfo: insights.instrumentInfo
-                ? {
-                    keyTechnicals: insights.instrumentInfo.keyTechnicals,
-                    technicalEvents: insights.instrumentInfo.technicalEvents,
-                    valuation: insights.instrumentInfo.valuation
-                }
-                : null,
+        excludeFields.forEach(path => {
+            deleteByPath(filteredInsights, path);
+        });
 
-            reports: Array.isArray(insights.reports)
-                ? insights.reports.map(r => ({
-                    provider: r.provider,
-                    reportDate: r.reportDate,
-                    reportTitle: r.reportTitle,
-                    investmentRating: r.investmentRating,
-                    targetPrice: r.targetPrice,
-                    targetPriceStatus: r.targetPriceStatus
-                }))
-                : [],
+        const hasNulls = Object.values(filteredInsights).some(
+            value => value === null || value === undefined
+        );
 
-            events: Array.isArray(insights.events)
-                ? insights.events.map(e => ({
-                    eventType: e.eventType,
-                    pricePeriod: e.pricePeriod,
-                    tradeType: e.tradeType,
-                    tradingHorizon: e.tradingHorizon,
-                    startDate: e.startDate,
-                    endDate: e.endDate
-                }))
-                : []
-        };
-
-        res.json(filteredInsights);
+        res.json({
+            symbol: filteredInsights.symbol ?? symbol.toUpperCase(),
+            data: filteredInsights,
+            hasNulls
+        });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: "Failed to fetch insights" });
     }
 });
+
+
+app.get("/api/insights2/:symbol", async (req, res) => {
+    try {
+        const { symbol } = req.params;
+
+        if (!symbol) {
+            return res.status(400).json({ error: "Symbol is required" });
+        }
+
+        const insights = await yf.insights(symbol.toUpperCase());
+
+        if (!insights) {
+            return res.status(502).json({
+                error: "No data returned from Yahoo Finance"
+            });
+        }
+
+        const hasNulls = Object.values(insights).some(
+            value => value === null || value === undefined
+        );
+
+        res.json({
+            symbol: insights.symbol ?? symbol.toUpperCase(),
+            data: insights,
+            hasNulls
+        });
+
+    } catch (err) {
+        console.error(err);
+
+        res.status(500).json({
+            error: "Failed to fetch insights"
+        });
+    }
+});
+
 
 
 
