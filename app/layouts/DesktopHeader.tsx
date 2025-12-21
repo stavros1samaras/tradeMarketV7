@@ -10,7 +10,7 @@ export default function DesktopHeader() {
             <Link to="/se/technical/overview/BTC-USD">
                 <Text>Techical</Text>
             </Link>
-            <Link to="/se/fundamental/single-analysis">
+            <Link to="/se/fundamental/single-analysis/overview/BTC-USD">
                 <Text>Fundamental</Text>
             </Link>
             <Link to="/se/sentiment">

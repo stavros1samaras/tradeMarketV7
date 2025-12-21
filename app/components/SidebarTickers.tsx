@@ -1,4 +1,4 @@
-import { Form, Link, useFetcher } from "react-router";
+import { Form, Link, useFetcher, useMatch } from "react-router";
 import { useLocation } from 'react-router'
 import { Button } from "./ui/button";
 
@@ -9,19 +9,23 @@ import { Button } from "./ui/button";
 
 export default function SidebarTickers({ name, symbol }: any) {
 
-    let location = useLocation();
-    const encodedFrom = encodeURIComponent(location.pathname);
+    const location = useLocation();
     const fetcher = useFetcher();
+
+    const currentPath = location.pathname;
+    const cleanedPath = currentPath.substring(
+        0,
+        currentPath.lastIndexOf("/")
+    );
+    const encodedFrom = encodeURIComponent(cleanedPath);
 
     const handleClick = () => {
         fetcher.load(`/fetchNewTicker/${symbol}/${encodedFrom}`);
     };
 
     return (
-        // <Link to={`/fetchNewTicker/${symbol}/${encodedFrom}`} >
         <Button onClick={handleClick} variant="code" size="default">
             <code>{name}</code>
         </Button>
-        // </Link>
-    )
+    );
 }

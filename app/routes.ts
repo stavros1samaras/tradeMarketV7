@@ -11,7 +11,10 @@ export default [
         ]),
         ...prefix("fundamental", [
             layout("./layouts/fundamental.tsx", [
-                route("single-analysis", "./routes/Fundamental/single-analysis.tsx"),
+                route("single-analysis", "./routes/Fundamental/single-analysis.tsx", [
+                    route("overview/:symbol", "./routes/Fundamental/single-analysis/overview.tsx"),
+                    route("financials/:symbol", "./routes/Fundamental/single-analysis/financials.tsx"),
+                ]),
                 route("auto-analysis", "./routes/Fundamental/auto-analysis.tsx"),
             ])
         ]),
