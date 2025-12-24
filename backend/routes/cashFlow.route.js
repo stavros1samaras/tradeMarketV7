@@ -4,7 +4,7 @@ import { deleteByPath, hasNullValues } from "../utils/object.js";
 
 const router = express.Router();
 
-// http://localhost:3001/api/balance-sheet/AAPL?period1=2024-01-01&period2=2025-01-01&type=quarterly
+// http://localhost:3001/api/cash-flow/GOOGL?period1=2022-01-01&period2=2025-01-01&type=quarterly
 router.get("/:symbol", async (req, res) => {
     try {
         const symbol = req.params.symbol;
@@ -19,18 +19,19 @@ router.get("/:symbol", async (req, res) => {
             period1,
             period2,
             type,
-            module: "balance-sheet"
+            module: "cash-flow"
         });
 
         if (!data) {
             return res.status(502).json({ error: "No data returned from Yahoo Finance" });
         }
 
+        // Στατικός πίνακας με paths που θέλουμε να αφαιρεθούν
         const excludeFields = [
-            "cash",
-            "totalLiabilities",
-            "minorityInterest",
-            "goodWill"
+            "depreciation",
+            "capitalExpenditures",
+            "dividendsPaid",
+            "otherCashFlowItems"
         ];
 
         const filteredData = { ...data };

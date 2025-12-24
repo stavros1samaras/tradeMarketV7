@@ -6,6 +6,9 @@ import recommendationsRoute from "./routes/recommendations.route.js";
 import searchRoute from "./routes/search.route.js";
 import trendingRoute from "./routes/trending.route.js";
 import balanceSheetRoute from "./routes/balanceSheet.route.js";
+import financials from "./routes/financials.route.js";
+import cashFlow from "./routes/cashFlow.route.js";
+
 import yf from "./services/yahoo.js";
 
 
@@ -18,24 +21,8 @@ app.use("/api/recommendations", recommendationsRoute);
 app.use("/api/search", searchRoute);
 app.use("/api/trending", trendingRoute);
 app.use("/api/balance-sheet", balanceSheetRoute);
-
-app.get("/api/test/balance-sheet", async (req, res) => {
-    try {
-        const data = await yf.fundamentalsTimeSeries("AAPL", {
-            period1: "2024-01-01",
-            type: "quarterly",
-            module: "balance-sheet"
-        });
-
-
-        res.json(data);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({
-            error: err.message
-        });
-    }
-});
+app.use("/api/financials", financials);
+app.use("/api/cash-flow", cashFlow);
 
 
 app.get("/api/test/financials", async (req, res) => {
@@ -56,6 +43,6 @@ app.get("/api/test/financials", async (req, res) => {
 });
 
 
-app.listen(3000, () => {
-    console.log("Backend → http://localhost:3000");
+app.listen(3001, () => {
+    console.log("Backend → http://localhost:3001");
 });
