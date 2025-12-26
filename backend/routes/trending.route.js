@@ -1,46 +1,19 @@
 import express from "express";
-import yf from "../services/yahoo.js";
-import { deleteByPath, hasNullValues } from "../utils/object.js";
+import { trending } from "../utils/trending.js";
 
 const router = express.Router();
 
+/**
+ * GET /api/trending/US
+*/
 router.get("/:symbol", async (req, res) => {
-    try {
-        const { symbol } = req.params;
+    const result = await trending(req.params.symbol);
 
-        if (!symbol) {
-            return res.status(400).json({ error: "Symbol is required" });
-        }
+    const status = result.status;
+    const body = result.body;
 
-        const trending = await yf.trendingSymbols(symbol.toUpperCase());
-
-        if (!trending) {
-            return res.status(502).json({
-                error: "No data returned from Yahoo Finance"
-            });
-        }
-
-        const excludeFields = [
-            "finance",
-            "meta"
-        ];
-
-        const filteredTrending = { ...trending };
-
-        excludeFields.forEach(path => {
-            deleteByPath(filteredTrending, path);
-        });
-
-        res.json({
-            symbol: symbol.toUpperCase(),
-            data: filteredTrending,
-            hasNulls: hasNullValues(filteredTrending)
-        });
-    } catch {
-        res.status(500).json({
-            error: "Failed to fetch trending symbols"
-        });
-    }
+    res.status(status);
+    res.json(body);
 });
 
 export default router;

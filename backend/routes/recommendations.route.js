@@ -1,48 +1,16 @@
 import express from "express";
-import yf from "../services/yahoo.js";
-import { deleteByPath, hasNullValues } from "../utils/object.js";
+import { recommendations } from "../utils/recommendations.js";
 
 const router = express.Router();
 
 router.get("/:symbol", async (req, res) => {
-    try {
-        const { symbol } = req.params;
+    const result = await recommendations(req.params.symbol);
 
-        if (!symbol) {
-            return res.status(400).json({ error: "Symbol is required" });
-        }
+    const status = result.status;
+    const body = result.body;
 
-        const recommendations = await yf.recommendationsBySymbol(
-            symbol.toUpperCase()
-        );
-
-        if (!recommendations) {
-            return res.status(502).json({
-                error: "No data returned from Yahoo Finance"
-            });
-        }
-
-        const excludeFields = [
-            "meta",
-            "finance"
-        ];
-
-        const filteredRecommendations = { ...recommendations };
-
-        excludeFields.forEach(path => {
-            deleteByPath(filteredRecommendations, path);
-        });
-
-        res.json({
-            symbol: symbol.toUpperCase(),
-            data: filteredRecommendations,
-            hasNulls: hasNullValues(filteredRecommendations)
-        });
-    } catch {
-        res.status(500).json({
-            error: "Failed to fetch recommendations"
-        });
-    }
+    res.status(status);
+    res.json(body);
 });
 
 export default router;

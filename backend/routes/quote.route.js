@@ -1,41 +1,16 @@
 import express from "express";
-import yf from "../services/yahoo.js";
-import { deleteByPath, hasNullValues } from "../utils/object.js";
+import { quote } from "../utils/quote.js";
 
 const router = express.Router();
 
 router.get("/:symbol", async (req, res) => {
-    try {
-        const { symbol } = req.params;
+    const result = await quote(req.params.symbol);
 
-        const quoteData = await yf.quote(symbol.toUpperCase());
+    const status = result.status;
+    const body = result.body;
 
-        if (!quoteData) {
-            return res.status(502).json({ error: "No data returned from Yahoo Finance" });
-        }
-
-        const excludeFields = [
-            "earningsTimestamp",
-            "earningsTimestampStart",
-            "earningsTimestampEnd",
-            "earningsCallTimestampStart",
-            "earningsCallTimestampEnd"
-        ];
-
-        const filteredQuote = { ...quoteData };
-
-        excludeFields.forEach(path => {
-            deleteByPath(filteredQuote, path);
-        });
-
-        res.json({
-            symbol: filteredQuote.symbol ?? symbol.toUpperCase(),
-            data: filteredQuote,
-            hasNulls: hasNullValues(filteredQuote)
-        });
-    } catch {
-        res.status(500).json({ error: "Failed to fetch quote" });
-    }
+    res.status(status);
+    res.json(body);
 });
 
 export default router;
