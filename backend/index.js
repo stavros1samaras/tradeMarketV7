@@ -1,3 +1,8 @@
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./swagger.js";
+
+
+
 import express from "express";
 import quoteRoute from "./routes/quote.route.js";
 import insightsRoute from "./routes/insights.route.js";
@@ -18,6 +23,9 @@ import yf from "./services/yahoo.js";
 
 
 const app = express();
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 
 app.use("/api/quote", quoteRoute);
 app.use("/api/insights", insightsRoute);
