@@ -1,10 +1,13 @@
 import express from "express";
-import { quote } from "../utils/quote.js";
+import { getQuote } from "../services/quote.service.js";
 
 const router = express.Router();
 
+/**
+ * GET http://localhost:3001/api/quote/AAPL
+ */
 router.get("/:symbol", async (req, res) => {
-    const result = await quote(req.params.symbol);
+    const result = await getQuote(req.params.symbol);
 
     const status = result.status;
     const body = result.body;

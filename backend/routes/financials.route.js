@@ -1,5 +1,5 @@
 import express from "express";
-import { financials } from "../utils/financials.js";
+import { getFinancials } from "../services/financials.service.js";
 
 const router = express.Router();
 
@@ -7,7 +7,7 @@ const router = express.Router();
  * GET http://localhost:3001/api/financials/AAPL?period1=2020-01-01&period2=2025-01-01&type=annual
  */
 router.get("/:symbol", async (req, res) => {
-    const result = await financials(req.params.symbol, req.query);
+    const result = await getFinancials(req.params.symbol, req.query);
 
     const status = result.status;
     const body = result.body;

@@ -1,5 +1,5 @@
 import express from "express";
-import { historical } from "../utils/historical.js";
+import { getHistorical } from "../services/historical.service.js";
 
 const router = express.Router();
 
@@ -7,7 +7,7 @@ const router = express.Router();
  * GET http://localhost:3001/api/historical/AAPL?period1=2023-01-01&period2=2024-01-01
  */
 router.get("/:symbol", async (req, res) => {
-    const result = await historical(req.params.symbol, req.query);
+    const result = await getHistorical(req.params.symbol, req.query);
 
     const status = result.status;
     const body = result.body;

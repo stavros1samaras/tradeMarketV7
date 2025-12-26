@@ -1,10 +1,13 @@
 import express from "express";
-import { search } from "../utils/search.js";
+import { getSearch } from "../services/search.service.js";
 
 const router = express.Router();
 
+/**
+ * GET http://localhost:3001/api/search/AAPL
+ */
 router.get("/:symbol", async (req, res) => {
-    const result = await search(req.params.symbol);
+    const result = await getSearch(req.params.symbol);
 
     const status = result.status;
     const body = result.body;

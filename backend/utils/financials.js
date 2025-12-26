@@ -1,60 +1,40 @@
 import yf from "../services/yahoo.js";
-import { deleteByPath, hasNullValues } from "./object.js";
+import { deleteByPath } from "./object.js";
 
 export async function financials(symbol, query) {
-    try {
-        const { period1, period2, type } = query;
-
-        if (!symbol) {
-            return {
-                status: 400,
-                body: { error: "Symbol is required" }
-            };
-        }
-
-        if (!period1 || !period2 || !type) {
-            return {
-                status: 400,
-                body: { error: "period1, period2 and type are required" }
-            };
-        }
-
-        const data = await yf.fundamentalsTimeSeries(symbol.toUpperCase(), {
-            period1,
-            period2,
-            type,
-            module: "financials"
-        });
-
-        if (!data) {
-            return {
-                status: 502,
-                body: { error: "No data returned from Yahoo Finance" }
-            };
-        }
-
-        const excludeFields = [
-            "deferredRevenue",
-            "otherCurrentLiabilities",
-            "minorityInterest",
-            "goodWill"
-        ];
-
-        const filteredData = { ...data };
-        excludeFields.forEach(path => deleteByPath(filteredData, path));
-
-        return {
-            status: 200,
-            body: {
-                symbol: filteredData.symbol ?? symbol.toUpperCase(),
-                data: filteredData,
-                hasNulls: hasNullValues(filteredData)
-            }
-        };
-    } catch (error) {
-        return {
-            status: 500,
-            body: { error: error.message }
-        };
+    if (!symbol) {
+        throw new Error("Symbol is required");
     }
+
+    const { period1, period2, type } = query;
+
+    if (!period1 || !period2 || !type) {
+        throw new Error("period1, period2 and type are required");
+    }
+
+    const data = await yf.fundamentalsTimeSeries(symbol.toUpperCase(), {
+        period1,
+        period2,
+        type,
+        module: "financials"
+    });
+
+    if (!data) {
+        throw new Error("No data returned from Yahoo Finance");
+    }
+
+    const excludeFields = [
+        "deferredRevenue",
+        "otherCurrentLiabilities",
+        "minorityInterest",
+        "goodWill"
+    ];
+
+    const filtered = { ...data };
+    excludeFields.forEach(path => deleteByPath(filtered, path));
+
+    return {
+        symbol: filtered.symbol ?? symbol.toUpperCase(),
+        data: filtered
+    };
 }

@@ -1,10 +1,13 @@
 import express from "express";
-import { recommendations } from "../utils/recommendations.js";
+import { getRecommendations } from "../services/recommendations.service.js";
 
 const router = express.Router();
 
+/**
+ * GET http://localhost:3001/api/recommendations/AAPL
+ */
 router.get("/:symbol", async (req, res) => {
-    const result = await recommendations(req.params.symbol);
+    const result = await getRecommendations(req.params.symbol);
 
     const status = result.status;
     const body = result.body;
