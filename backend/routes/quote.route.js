@@ -6,6 +6,7 @@ const router = express.Router();
 /**
  * GET http://localhost:3001/api/quote/AAPL
  */
+
 router.get("/:symbol", async (req, res) => {
     const result = await getQuote(req.params.symbol);
 
