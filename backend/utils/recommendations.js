@@ -13,7 +13,9 @@ export async function recommendations(symbol) {
         throw new Error("No data returned from Yahoo Finance");
     }
 
-    const excludeFields = ["meta", "finance"];
+    const excludeFields = [
+
+    ];
 
     const filtered = { ...recommendationsData };
     excludeFields.forEach(path => deleteByPath(filtered, path));

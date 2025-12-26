@@ -14,11 +14,9 @@ export async function quote(symbol) {
     }
 
     const excludeFields = [
-        "earningsTimestamp",
-        "earningsTimestampStart",
-        "earningsTimestampEnd",
-        "earningsCallTimestampStart",
-        "earningsCallTimestampEnd"
+        "regularMarketTime",
+        "messageBoardId"
+
     ];
 
     const filtered = { ...quoteData };

@@ -7,17 +7,16 @@ export async function quoteSummary(symbol) {
     }
 
     const upperSymbol = symbol.toUpperCase();
-    const summary = await yf.quoteSummary(upperSymbol);
+    const summary = await yf.quoteSummary(upperSymbol, {
+        modules: "all"
+    });
 
     if (!summary) {
         throw new Error("No data returned from Yahoo Finance");
     }
 
     const excludeFields = [
-        "price.regularMarketOpen",
-        "price.regularMarketPreviousClose",
-        "defaultKeyStatistics.enterpriseValue",
-        "financialData.currentPrice"
+        "preMarketTime"
     ];
 
     const filteredSummary = { ...summary };

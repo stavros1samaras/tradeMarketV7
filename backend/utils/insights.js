@@ -14,9 +14,12 @@ export async function insights(symbol) {
     }
 
     const excludeFields = [
-        "recommendation.score",
-        "instrumentInfo",
-        "companySnapshot1.sectorInfo"
+        "upsellSearchDD",
+        "events",
+        "reports",
+        "secReports",
+        "sigDevs",
+        "upsell"
     ];
 
     const filteredInsights = { ...insightsData };

@@ -41,6 +41,23 @@ app.use("/api/historical", historical);
 app.use("/api/options", options);
 
 
+
+
+app.get("/api/default-key-statistics/:symbol", async (req, res) => {
+    try {
+        const symbol = req.params.symbol.toUpperCase();
+
+        const data = await yf.quoteSummary(symbol, {
+            modules: "all"
+        });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
 app.listen(3001, () => {
     console.log("Backend → http://localhost:3001");
 });
