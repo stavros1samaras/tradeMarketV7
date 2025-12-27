@@ -12,7 +12,7 @@ export async function search(symbol) {
         throw new Error("No data returned from Yahoo Finance");
     }
 
-    const excludeFields = ["meta", "finance"];
+    const excludeFields = ["news"];
 
     const filtered = { ...searchResults };
     excludeFields.forEach(path => deleteByPath(filtered, path));
