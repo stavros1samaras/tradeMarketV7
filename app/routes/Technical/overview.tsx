@@ -2,12 +2,12 @@ import PriceChart from '~/components/priceChart2'
 import type { Route } from './+types/overview';
 import { useParams } from 'react-router';
 import { overviewModule } from '../../modules/.server/technical'
+import { data as res } from "react-router";
 
-// export async function loader({ params, request }: LoaderFunctionArgs) {
 
 export async function loader({ params, request }: Route.LoaderArgs) {
     const data: any = await overviewModule(params, request);
-    return data;
+    return res(data, { status: 200 });
 }
 
 export default function overview({ loaderData }: { loaderData: any }) {
