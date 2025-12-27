@@ -51,7 +51,7 @@ export default function PriceChart2({ chartData }: any) {
     let { symbol } = useParams();
     const symbolAsked: string = symbol as string;
 
-    const [data, setData] = useState(chartData);
+    const [currentChartData, setcurrentChartData] = useState(chartData);
     const [datesPerPeriod, setDatesPerPeriod] = useState<number>(100);
 
     let oneYearRangeRef = useRef<any>(null);
@@ -63,11 +63,13 @@ export default function PriceChart2({ chartData }: any) {
     const [pendingRef, setPendingRef] = useState<null | { ref: any; period: number; }>(null);
 
     useEffect(() => {
+        // when i refactor the modules to the last version i think
+        // i would pendingRef.ref.current = fetcherData with no problem
+        // but i will leave it as it is for now
         if (fetcher.state === "idle" && fetcher.data && pendingRef) {
-            // pendingRef.ref.current = fetcher.data;
-            let temp = fetcher.data;
-            pendingRef.ref.current = temp.data
-            setData(temp.data);
+            let fetcherData = fetcher.data;
+            pendingRef.ref.current = fetcherData.pricePoints
+            setcurrentChartData(fetcherData.pricePoints);
             setDatesPerPeriod(pendingRef.period);
             setPendingRef(null);
         }
@@ -80,7 +82,7 @@ export default function PriceChart2({ chartData }: any) {
             setPendingRef({ ref: oneMonthRangeRef, period: ONE_MONTH_INTERVAL });
             fetcher.load(`/se/technical/overview/${ticker.symbol}?start=${ticker.startDate}`);
         } else {
-            setData(oneMonthRangeRef.current);
+            setcurrentChartData(oneMonthRangeRef.current);
             setDatesPerPeriod(ONE_MONTH_INTERVAL);
         }
     };
@@ -93,7 +95,7 @@ export default function PriceChart2({ chartData }: any) {
             fetcher.load(`/se/technical/overview/${ticker.symbol}?start=${ticker.startDate}`);
 
         } else {
-            setData(oneYearRangeRef.current);
+            setcurrentChartData(oneYearRangeRef.current);
             setDatesPerPeriod(ONE_YEAR_INTERVAL);
         }
     };
@@ -104,7 +106,7 @@ export default function PriceChart2({ chartData }: any) {
             setPendingRef({ ref: maxRangeRef, period: MAX_INTERVAL });
             fetcher.load(`/se/technical/overview/${ticker.symbol}?start=${ticker.startDate}`);
         } else {
-            setData(maxRangeRef.current);
+            setcurrentChartData(maxRangeRef.current);
             setDatesPerPeriod(MAX_INTERVAL);
         }
     };
@@ -118,7 +120,7 @@ export default function PriceChart2({ chartData }: any) {
                 <AreaChart
                     width={500}
                     height={400}
-                    data={data.pricePoints}
+                    data={currentChartData}
                     margin={{
                         top: 10,
                         right: 30,

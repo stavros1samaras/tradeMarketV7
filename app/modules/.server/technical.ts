@@ -30,7 +30,9 @@ export async function pricePoints(params: any, request: Request) {
 
     console.log(ticker)
     let pricePoints = await fetchTickerPricePoints2(ticker);
-    return { pricePoints }
+    //test if loader can return 2 properties
+    let options = [1, 2, 3, 4, 5]
+    return { pricePoints, options }
 }
 
 

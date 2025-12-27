@@ -7,7 +7,7 @@ import { overviewModule } from '../../modules/.server/technical'
 
 export async function loader({ params, request }: Route.LoaderArgs) {
     const data: any = await overviewModule(params, request);
-    return { data };
+    return data;
 }
 
 export default function overview({ loaderData }: { loaderData: any }) {
@@ -17,7 +17,8 @@ export default function overview({ loaderData }: { loaderData: any }) {
     return (
         <>
             <h2>Bit Price Overview</h2>
-            <PriceChart key={symbol.symbol} chartData={loaderData.data} />
+            <PriceChart key={symbol.symbol} chartData={loaderData.pricePoints} />
+            {JSON.stringify(loaderData.options)}
         </>
     )
 }
