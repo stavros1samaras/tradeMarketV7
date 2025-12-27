@@ -46,7 +46,7 @@ export function GraphTabs({ month, oneYear, max }: any) {
     );
 }
 
-export default function PriceChart2({ chartData }: props) {
+export default function PriceChart2({ chartData }: any) {
 
     let { symbol } = useParams();
     const symbolAsked: string = symbol as string;
@@ -64,8 +64,10 @@ export default function PriceChart2({ chartData }: props) {
 
     useEffect(() => {
         if (fetcher.state === "idle" && fetcher.data && pendingRef) {
-            pendingRef.ref.current = fetcher.data;
-            setData(fetcher.data);
+            // pendingRef.ref.current = fetcher.data;
+            let temp = fetcher.data;
+            pendingRef.ref.current = temp.data
+            setData(temp.data);
             setDatesPerPeriod(pendingRef.period);
             setPendingRef(null);
         }
@@ -116,7 +118,7 @@ export default function PriceChart2({ chartData }: props) {
                 <AreaChart
                     width={500}
                     height={400}
-                    data={data}
+                    data={data.pricePoints}
                     margin={{
                         top: 10,
                         right: 30,
